@@ -17,6 +17,7 @@ include_directories(${CMAKE_SOURCE_DIR}/SDL2_net-2.0.1)
 include_directories(${CMAKE_SOURCE_DIR}/SDL2_ttf-2.0.15)
 include_directories(${CMAKE_SOURCE_DIR}/SDL2_mixer-2.0.4)
 include_directories(${CMAKE_SOURCE_DIR}/SDL2_image-2.0.5)
+include_directories(${CMAKE_SOURCE_DIR}/ffmpeg-dev/include)
 
 add_library(hidapi
         SHARED
@@ -60,7 +61,58 @@ add_library(SDL2_image
 set_target_properties(SDL2_image
         PROPERTIES IMPORTED_LOCATION
         ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libSDL2_image.so)
+##############################################################################
 
+add_library(avcodec
+        SHARED
+        IMPORTED)
+set_target_properties(avcodec
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavcodec.so)
+
+add_library(avdevice
+        SHARED
+        IMPORTED)
+set_target_properties(avdevice
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavdevice.so)
+
+add_library(avfilter
+        SHARED
+        IMPORTED)
+set_target_properties(avfilter
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavfilter.so)
+
+add_library(avformat
+        SHARED
+        IMPORTED)
+set_target_properties(avformat
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavformat.so)
+
+add_library(avutil
+        SHARED
+        IMPORTED)
+set_target_properties(avutil
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libavutil.so)
+
+add_library(swresample
+        SHARED
+        IMPORTED)
+set_target_properties(swresample
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libswresample.so)
+
+add_library(swscale
+        SHARED
+        IMPORTED)
+set_target_properties(swscale
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/jniLibs/${ANDROID_ABI}/libswscale.so)
+
+##############################################################################
 add_library( # Sets the name of the library.
         native-lib
 
@@ -71,8 +123,13 @@ add_library( # Sets the name of the library.
         ${CMAKE_SOURCE_DIR}/native-lib.cpp
         ${CMAKE_SOURCE_DIR}/SDL_android_main.cpp
         #${CMAKE_SOURCE_DIR}/main.cpp
-        ${CMAKE_SOURCE_DIR}/fivedata.cpp
-        ${CMAKE_SOURCE_DIR}/five.cpp
+        #${CMAKE_SOURCE_DIR}/fivedata.cpp
+        #${CMAKE_SOURCE_DIR}/five.cpp
+
+        #${CMAKE_SOURCE_DIR}/main-play-video.cpp
+
+        ${CMAKE_SOURCE_DIR}/cmdutils.c
+        ${CMAKE_SOURCE_DIR}/main-ffplay.c
         )
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -106,5 +163,14 @@ target_link_libraries( # Specifies the target library.
         SDL2_ttf
         mpg123
         hidapi
+        #############################
+        avcodec
+        avdevice
+        avfilter
+        avformat
+        avutil
+        swresample
+        swscale
+        #############################
         #${SDL2-lib}
         )

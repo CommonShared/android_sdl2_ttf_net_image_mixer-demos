@@ -86,6 +86,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected static int mLastCursorID;
     protected static SDLGenericMotionListener_API12 mMotionListener;
     protected static HIDDeviceManager mHIDDeviceManager;
+    protected static String[] args;
 
     // This is what SDL runs in. It invokes SDL_main(), eventually
     protected static Thread mSDLThread;
@@ -144,6 +145,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             "SDL2_mixer",
             "SDL2_net",
             "SDL2_ttf",
+            "avutil",
+            "avcodec",
+            "avformat",
+            //"avresample",
+            "swresample",
+            "swscale",
+            "avfilter",
+            //"avdevice",
             "native-lib"
         };
     }
@@ -161,8 +170,11 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      * The default implementation returns an empty array. It never returns null.
      * @return arguments for the native application.
      */
-    protected String[] getArguments() {
+    /*protected String[] getArguments() {
         return new String[0];
+    }*/
+    protected String[] getArguments() {
+        return args;
     }
 
     public static void initialize() {
@@ -190,6 +202,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         Log.v(TAG, "Model: " + Build.MODEL);
         Log.v(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
+
+        args = new String[1];
+
+        Intent i = getIntent();
+        args[0] = i.getStringExtra("filename");
+        Log.v("SDL", "onCreate(): file " + args[0]);
 
         try {
             Thread.currentThread().setName("SDLActivity");
