@@ -203,12 +203,12 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         Log.v(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
 
-        args = new String[1];
+        args = new String[2];
 
         Intent i = getIntent();
         args[0] = i.getStringExtra("filename");
-        Log.v("SDL", "onCreate(): file " + args[0]);
-
+        args[1] = i.getStringExtra("option");
+        Log.v("SDL", "onCreate(): filename " + args[0] + ",option " + args[1]);
         try {
             Thread.currentThread().setName("SDLActivity");
         } catch (Exception e) {

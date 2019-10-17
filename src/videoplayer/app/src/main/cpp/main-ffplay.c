@@ -76,12 +76,15 @@
 // 资源文件
 char szBtnPlayFile[] = "play.png";    // 播放
 char szBtnStopFile[] = "stop.png";    // 暂停
+char szBtnExitFile[] = "exit.png";    // 退出
 int  nBackColor       = 0xFFFFFF;      // 棋子图片的背景色
 int g_nIsPlay = 1;//是否在播放状态 1-播放，0-停止
 SDL_Texture  *pPlayTexture = NULL; // 播放
 SDL_Texture  *pStopTexture = NULL; // 暂停
+SDL_Texture  *pExitTexture = NULL; // 退出
 SDL_Rect nPlayRect = {0,0,100,100};
 SDL_Rect nStopRect = {0,0,100,100};
+SDL_Rect nExitRect = {100,0,100,100};
 
 /////////////////////////////////////////////////////
 const char program_name[] = "ffplay";
@@ -1418,6 +1421,8 @@ static void video_display(VideoState* is)
     {
         SDL_RenderCopyEx(renderer, pPlayTexture, NULL, &nPlayRect, 0, NULL, SDL_FLIP_NONE);
     }
+
+    SDL_RenderCopyEx(renderer, pExitTexture, NULL, &nExitRect, 0, NULL, SDL_FLIP_NONE);
 
 	SDL_RenderPresent(renderer);
 }
@@ -3472,7 +3477,8 @@ static void event_loop(VideoState* cur_stream)
 				break;
 			}
 			LOGE("button(%d, %d)",event.button.x, event.button.y);
-			if(event.button.x <= 100 && event.button.y <= 100)
+			if(event.button.x >= nPlayRect.x && event.button.x <= (nPlayRect.x + nPlayRect.w)
+			    && event.button.y >= nPlayRect.y && event.button.y <= (nPlayRect.y + nPlayRect.h))
 			{
 				if(g_nIsPlay == 1)
 				{
@@ -3491,6 +3497,13 @@ static void event_loop(VideoState* cur_stream)
 				toggle_pause(cur_stream);
 				continue;
 			}
+			else if(event.button.x >= nExitRect.x && event.button.x <= (nExitRect.x + nExitRect.w)
+			    && event.button.y >= nExitRect.y && event.button.y <= (nExitRect.y + nExitRect.h))
+            {
+                LOGE("exit button clicked");
+                do_exit(cur_stream);
+                break;
+            }
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				static int64_t last_mouse_left_click = 0;
 				if (av_gettime_relative() - last_mouse_left_click <= 500000) {
@@ -3903,8 +3916,10 @@ int main(int argc, char** argv)
 		}
 	}
 	// 加载图片文件
-	if(NULL==(pPlayTexture = GetImageTexture(renderer, szBtnPlayFile, 0, 0))
-	   || NULL==(pStopTexture = GetImageTexture(renderer, szBtnStopFile, 1, nBackColor)))
+	if(NULL==(pPlayTexture = GetImageTexture(renderer, szBtnPlayFile, 0, 0)) ||
+	    NULL==(pStopTexture = GetImageTexture(renderer, szBtnStopFile, 1, nBackColor))||
+        NULL==(pExitTexture = GetImageTexture(renderer, szBtnExitFile, 1, nBackColor))
+	   )
 	{
 		fprintf(stderr, "3 %s", IMG_GetError());
 		LOGE("3 %s", SDL_GetError());

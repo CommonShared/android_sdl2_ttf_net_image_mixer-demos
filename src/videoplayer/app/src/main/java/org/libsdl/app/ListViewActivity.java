@@ -81,6 +81,7 @@ void startPlay(String fullPath)
 {
 	Intent intent = new Intent(getApplicationContext(), SDLActivity.class);
 	intent.putExtra("filename", fullPath);
+	intent.putExtra("option", "-fs");
 	startActivity(intent);
 	history.put(fullPath);
 }
@@ -104,8 +105,9 @@ public void onCreate(Bundle savedInstanceState) {
 	});
 
 	final EditText editText=(EditText)findViewById(R.id.edit_text);
-	editText.setText("/data/local/tmp/big_buck_bunny.mp4");
-	startPlay(editText.getText().toString());
+	//editText.setText("/data/local/tmp/big_buck_bunny.mp4");
+	//editText.setText("http://ivi.bupt.edu.cn/hls/cctv1.m3u8");
+	//startPlay(editText.getText().toString());
 	editText.setOnEditorActionListener(new OnEditorActionListener() {  
 		@Override  
 		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {  
